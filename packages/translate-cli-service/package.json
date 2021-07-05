@@ -1,0 +1,34 @@
+{
+  "name": "@xv/translate-cli-service",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "xiaoyown <qinzy132567@hanslaser.com>",
+  "homepage": "",
+  "license": "ISC",
+  "bin": {
+    "translate-cli-service": "bin/translate-cli-service.js"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development supervisor app.js",
+    "start": "cross-env NODE_ENV=production node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "koa": "^2.13.1",
+    "koa-body": "^4.2.0",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^10.0.0",
+    "koa-static": "^5.0.0"
+  }
+}
