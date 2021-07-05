@@ -4,6 +4,7 @@ const KoaBody = require('koa-body');
 // const KoaStatic = require('koa-static');
 const router = require('./lib/apis');
 const CONFIG = require('./config');
+const path = require('path');
 
 const app = new Koa();
 
@@ -21,7 +22,6 @@ async function start () {
   // app.use(KoaStatic(path.join(__dirname, 'build')));
   app.use(router.routes(),  router.allowedMethods());
   app.listen(CONFIG.port);
-  console.log('https://127.0.0.1:7000');
 }
 
-module.exports = start;
+start();
