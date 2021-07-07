@@ -75,7 +75,7 @@ fetch.interceptors.request.use(config => {
 
 // 响应拦截器
 fetch.interceptors.response.use((response) => {
-  const { status, data } = response
+  const { status } = response
   let msg = ''
   if (status < 200 || status >= 300) {
     // 处理 http 错误，抛到业务代码

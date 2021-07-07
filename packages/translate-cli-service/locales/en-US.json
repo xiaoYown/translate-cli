@@ -1,3 +1,6 @@
 {
-  "menu.home": "Home"
+  "menu.about": "about",
+  "menu.home": "home",
+  "menu.user": "user",
+  "test.add": "add"
 }

@@ -1,5 +1,6 @@
 {
-  "menu.home": "首页",
   "menu.about": "关于",
-  "menu.user": "用户"
+  "menu.home": "首页",
+  "menu.user": "用户",
+  "test.add": "新增"
 }

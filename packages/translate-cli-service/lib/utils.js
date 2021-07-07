@@ -11,7 +11,9 @@ const isExist = (filePath) => {
   })
 }
 
-const readFileSync = (filePath) => JSON.parse(fs.readFileSync(filePath, { encoding: 'utf8' }).toString());
+const readFileSync = (filePath) => {
+  return JSON.parse(fs.readFileSync(filePath, { encoding: 'utf8' }).toString());
+}
 
 const getConfig = async () => {
   const configName = 'xtc.config.json';
@@ -93,17 +95,23 @@ const formatData = (keys, files) => {
 
 const getFilesInfo = (files, keys) => {
   const result = {};
+  let filledLength = 0;
   files.forEach(item => {
+    filledLength = Object.keys(item.content).filter(key => !!item.content[key])
     result[item.name] = {
-      percent: Math.floor(Object.keys(item.content).length * 100 / keys.length)
+      percent: Math.floor(filledLength.length * 100 / keys.length) / 100
     };
   });
   return result;
 }
 
-const getFiles = async () => {
+const getLocalesPath = async () => {
   const { baseUrl } = await getConfig();
-  const localesPath = path.resolve(baseUrl);
+  return path.resolve(baseUrl);
+}
+
+const getFiles = async () => {
+  const localesPath = await getLocalesPath();
   
   const files = getJsonFiles(localesPath);
   const keys = getAllKeys(files).sort();
@@ -115,7 +123,49 @@ const getFiles = async () => {
   };
 }
 
+const getAllLangs = async () => {
+  const localesPath = await getLocalesPath();
+  return getJsonFiles(localesPath).map(item => item.name);
+}
+
+function writeFile (filePath, content) {
+  fs.writeFileSync(
+    path.join(filePath),
+    JSON.stringify(content, null, 2)
+  );
+}
+
+const saveFiles = async (datasource) => {
+  const langs = await getAllLangs();
+  const files = {};
+  let lang = null;
+  langs.forEach(langName => {
+    lang = {};
+    datasource.forEach(item => {
+      lang[item.name] = item.data[langName];
+    });
+    files[langName] = lang;
+  });
+  const localesPath = await getLocalesPath();
+  for (let key in files) {
+    writeFile(path.join(localesPath, `${key}.json`), files[key]);
+  }
+}
+
+const addTranslate = async (data) => {
+  const localesPath = await getLocalesPath();
+  const files = getJsonFiles(localesPath);
+  files.forEach(item => {
+    writeFile(
+      item.path,
+      Object.assign(item.content, { [data.key]: data.values[item.name] })
+    )
+  });
+}
+
 module.exports = {
   getConfig,
-  getFiles
+  getFiles,
+  saveFiles,
+  addTranslate,
 }

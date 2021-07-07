@@ -1,18 +1,13 @@
+import './index.less';
 import { Input } from 'antd';
 
 const ModifyInput = (props) => {
   const { name, data, onChange } = props;
   return <div
-    style={{
-      display: 'inline-block',
-      verticalAlign: 'top',
-      width: '33%',
-      padding: '0 8px',
-      lineHeight: '39px'
-    }}
+    className="m-ModifyInput"
   >
-    <h4>{ name }</h4>
-    <ul>
+    <h4 className="m-ModifyInput-title">{ name }</h4>
+    <ul className="m-ModifyInput-langs">
       {
         Object.keys(data).map(key => {
           return <li
@@ -22,7 +17,6 @@ const ModifyInput = (props) => {
               style={{
                 display: 'inline-block',
                 verticalAlign: 'top',
-                verticalAlign: 'top',
                 width: '60px'
               }}
             >{ key } : </span>
@@ -31,13 +25,15 @@ const ModifyInput = (props) => {
                 display: 'inline-block',
                 verticalAlign: 'top',
                 width: '300px',
-                padding: '4px 0'
               }}
             >
               <Input
                 value={data[key]}
                 onChange={(e) => {
-                  console.log(e.target.value)
+                  onChange({
+                    key,
+                    value: e.target.value
+                  })
                 }}
               />
             </div>
