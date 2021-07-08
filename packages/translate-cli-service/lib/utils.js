@@ -15,11 +15,11 @@ const readFileSync = (filePath) => {
   return JSON.parse(fs.readFileSync(filePath, { encoding: 'utf8' }).toString());
 }
 
+const defaultConfig = {
+  baseUrl: './locales_'
+}
+const configName = 'xtc.config.json';
 const getConfig = async () => {
-  const configName = 'xtc.config.json';
-  const defaultConfig = {
-    baseUrl: './locales'
-  }
   const filePath = path.resolve(configName);
   const exist = await isExist(filePath);
   const config = Object.assign({}, defaultConfig);
@@ -28,6 +28,21 @@ const getConfig = async () => {
     const content = readFileSync(filePath);
     Object.assign(config, content);
   }
+  return config;
+}
+const updateConfig = async (newConfig) => {
+  const filePath = path.resolve(configName);
+  const exist = await isExist(filePath);
+  const config = Object.assign({}, defaultConfig);
+  if (exist) {
+    // TODO: 异常处理
+    const content = readFileSync(filePath);
+    Object.assign(config, content, newConfig);
+  }
+  writeFile(
+    filePath,
+    config
+  )
   return config;
 }
 
@@ -112,15 +127,21 @@ const getLocalesPath = async () => {
 
 const getFiles = async () => {
   const localesPath = await getLocalesPath();
-  
-  const files = getJsonFiles(localesPath);
-  const keys = getAllKeys(files).sort();
-  const info = getFilesInfo(files, keys);
+  const existFolder = await isExist(localesPath);
 
-  return {
-    info,
-    datasource: formatData(keys, files)
-  };
+  if (existFolder) {
+    const files = getJsonFiles(localesPath);
+    const keys = getAllKeys(files).sort();
+    const info = getFilesInfo(files, keys);
+  
+    return {
+      info,
+      datasource: formatData(keys, files)
+    };
+  } else {
+    return null;
+  }
+  
 }
 
 const getAllLangs = async () => {
@@ -165,6 +186,8 @@ const addTranslate = async (data) => {
 
 module.exports = {
   getConfig,
+  updateConfig,
+
   getFiles,
   saveFiles,
   addTranslate,

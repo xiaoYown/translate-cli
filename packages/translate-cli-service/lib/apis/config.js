@@ -1,8 +1,8 @@
 const router = require('koa-router')();
 const codeMsg = require('./code_msg');
-const { getConfig, getFiles, saveFiles, addTranslate } = require('../utils');
+const { getConfig, updateConfig, getFiles, saveFiles, addTranslate } = require('../utils');
 
-const { CODE_OK } = codeMsg;
+const { CODE_OK, DATA_NOT_EXIST } = codeMsg;
 
 router.get('/get', async (ctx) => {
   const result = await getConfig();
@@ -13,13 +13,21 @@ router.get('/get', async (ctx) => {
   };
 });
 
-router.get('/getFiles', async (ctx) => {
-  const result = await getFiles();
-
+router.post('/save_base_url', async (ctx) => {
+  await updateConfig(ctx.request.body);
   ctx.body = {
     ...CODE_OK,
-    data: result
+    data: null
   };
+});
+
+router.get('/getFiles', async (ctx) => {
+  let result = await getFiles();
+  let data = { ...CODE_OK, data: result };
+  if (!result) {
+    Object.assign(data, DATA_NOT_EXIST);
+  }
+  ctx.body = data;
 });
 
 router.post('/saveFiles', async (ctx) => {

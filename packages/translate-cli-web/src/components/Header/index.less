@@ -1,0 +1,29 @@
+@height: 200px;
+@collapse-height: 100px;
+
+.g-layout-header {
+  height: @height;
+  
+  &.s-collapse {
+    &,
+    & .g-layout-header-fixed {
+      height: @collapse-height;
+    }
+  }
+  .m-header-base-url {
+    display: flex;
+    line-height: 32px;
+  }
+}
+
+.g-layout-header-fixed {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  height: @height;
+  padding: 8px 0;
+  background-color: #444444;
+  color: #FFFFFF;
+}

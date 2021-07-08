@@ -1,18 +1,27 @@
 import './index.less';
-import { Input } from 'antd';
+import { Input, Checkbox } from 'antd';
+import { updateBatchChecked } from '../../stores';
 
 const ModifyInput = (props) => {
-  const { name, data, onChange } = props;
+  const { name, data, onChange, batching, checked } = props;
   return <div
     className="m-ModifyInput"
   >
-    <h4 className="m-ModifyInput-title">{ name }</h4>
+    <h4 className="m-ModifyInput-title">
+      <span>{ name }</span>
+      {
+        !batching ? null : <Checkbox
+          checked={checked}
+          onChange={(res) => {
+            updateBatchChecked({ method: 'update', key: name });
+          }}
+        />
+      }
+    </h4>
     <ul className="m-ModifyInput-langs">
       {
         Object.keys(data).map(key => {
-          return <li
-            key={key}
-          >
+          return <li key={key}>
             <span
               style={{
                 display: 'inline-block',

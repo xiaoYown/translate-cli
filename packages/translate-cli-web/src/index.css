@@ -20,3 +20,9 @@ code {
 li {
   list-style: none;
 }
+
+.g-content-width {
+  width: 70%;
+  max-width: 1000px;
+  margin: 0 auto;
+}

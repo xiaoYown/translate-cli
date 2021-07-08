@@ -1,7 +1,4 @@
 .m-ModifyInput {
-  /* display: inline-block;
-  vertical-align: top; */
-  width: 60%;
   line-height: 32px;
   border: 1px solid #444444;
   margin-bottom: 10px;
@@ -13,10 +10,17 @@
   }
 
   .m-ModifyInput-title {
+    position: relative;
     padding-left: 6px;
-    font-size: 16px;
     background-color: #444444;
+    font-size: 16px;
     color: #FFFFFF;
+
+    .ant-checkbox-wrapper {
+      position: absolute;
+      top: 0;
+      right: 7px;
+    }
   }
   .m-ModifyInput-langs {
     padding: 6px;

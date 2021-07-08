@@ -30,7 +30,7 @@ function ModalRename(props) {
     };
     delete values[nameKey];
     addTranslate(params).then(res => {
-      const { code } = res.data.data;
+      const { code } = res.data;
       if (code === 0) {
         onSuccess();
       } else {
@@ -38,6 +38,7 @@ function ModalRename(props) {
       }
     }).catch(err => {
       message.error('添加失败');
+      throw err;
     })
   }
 

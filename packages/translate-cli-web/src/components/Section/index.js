@@ -1,29 +1,20 @@
 import { Component } from 'react';
 import { Button, message } from 'antd';
 import { FileAddOutlined, FormOutlined, SaveOutlined } from '@ant-design/icons'
-import { getConfig, getFiles, saveFiles } from '../../apis';
+import { saveFiles } from '../../apis';
 import ModifyInput from '../ModifyInput';
+import { filesWrapper, batchOptsWrapper, getFilesData } from '../../stores';
 
 import ModalAdd from '../ModalAdd';
 
 class Section extends Component {
   state = {
-    datasource: [],
-    langs: [],
     saving: false,
+    modalAddVisible: false,
   }
-  componentDidMount () {
-    this.fetchFilesData();
-  }
-  fetchFilesData = () => {
-    getConfig();
-    getFiles().then(res => {
-      const { datasource, info } = res.data.data;
-      this.setState({
-        datasource,
-        langs: Object.keys(info)
-      });
-    });
+  getFiles = () => {
+    this.hideModalAdd();
+    getFilesData();
   }
   onHandleChange = (name, res) => {
     const { datasource } = this.state;
@@ -32,8 +23,11 @@ class Section extends Component {
 
     this.setState(datasource);
   }
-  onHandleAdd = () => {
-    this.setState({ showModalAdd: true });
+  showModalAdd = () => {
+    this.setState({ modalAddVisible: true });
+  }
+  hideModalAdd = () => {
+    this.setState({ modalAddVisible: false });
   }
   onHandleRename = () => {
   }
@@ -53,34 +47,43 @@ class Section extends Component {
     })
   }
   render () {
+    const { datasource, langs } = this.props.filesStore;
+    const { checkedKeys, open } = this.props.batchOptsStore;
     const {
-      datasource,
       saving,
-      showModalAdd,
-      langs,
+      modalAddVisible,
     } = this.state;
 
     return <div
-      style={{ padding: '20px', textAlign: 'left' }}
+      style={{
+        padding: '20px',
+        textAlign: 'left'
+      }}
     >
-      {
-        datasource.map(item => {
-          return <ModifyInput
-            key={item.name}  
-            {...item}
-            onChange={(res) => this.onHandleChange(item.name, res)}
-          />
-        })
-      }
+      <div className="g-content-width">
+        {
+          datasource.map(item => {
+            return <ModifyInput
+              key={item.name}  
+              {...item}
+              batching={open}
+              checked={checkedKeys.indexOf(item.name) !== -1}
+              onChange={(res) => this.onHandleChange(item.name, res)}
+            />
+          })
+        }
+      </div>
       <ModalAdd
-        visible={showModalAdd}
+        visible={modalAddVisible}
         langs={langs}
+        onCancel={this.hideModalAdd}
+        onSuccess={this.getFiles}
       />
       <div style={{ position: 'fixed', bottom: '20px', right: '20px', cursor: 'pointer' }}>
         <Button
           type="primary"
           icon={<FileAddOutlined />}
-          onClick={this.onHandleAdd}
+          onClick={this.showModalAdd}
         >添加</Button>
         <br />
         <br />
@@ -103,4 +106,4 @@ class Section extends Component {
   }
 }
 
-export default Section;
+export default batchOptsWrapper(filesWrapper(Section));
