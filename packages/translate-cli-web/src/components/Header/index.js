@@ -1,15 +1,23 @@
 import './index.less';
 import { Component } from 'react';
 import { Input, Button } from 'antd';
-import { configWrapper, updateBaseUrl, saveBaseUrl, switchBatchOptsStatus } from '../../stores';
-
+import {
+  configWrapper,
+  updateBaseUrl,
+  saveBaseUrl,
+  switchBatchOptsStatus,
+  batchOptsWrapper,
+  removeBatchKeys,
+} from '../../stores';
 
 class Header extends Component {
   onHandleChangeBaseUrl = (e) => {
     updateBaseUrl(e.target.value);
   }
   render () {
-    const { baseUrl } = this.props.configStore;
+    const { configStore, batchOptsStore } = this.props;
+    const { baseUrl } = configStore;
+
     return <div className="g-layout-header">
       <div className="g-layout-header-fixed">
         <div className="g-content-width">
@@ -25,13 +33,19 @@ class Header extends Component {
             <Button
               onClick={saveBaseUrl}
             >保存</Button>
-            <br />
-            <Button onClick={switchBatchOptsStatus}>批量操作</Button>
           </div>
+          <br />
+          <Button onClick={switchBatchOptsStatus}>批量操作</Button>
+          <br />
+          {
+            batchOptsStore.open ? <div>
+              <Button onClick={removeBatchKeys}>批量删除</Button>
+            </div> : null
+          }
         </div>
       </div>
     </div>
   }
 }
 
-export default configWrapper(Header);
+export default batchOptsWrapper(configWrapper(Header));

@@ -1,7 +1,12 @@
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { message } from 'antd';
-import { fetchConfig, postSaveBaseUrl, fetchFiles } from '../apis';
+import {
+  fetchConfig,
+  postSaveBaseUrl,
+  fetchFiles,
+  postBatchRemoveKeys,
+} from '../apis';
 
 // - config 数据
 const configStore = observable({
@@ -83,6 +88,9 @@ const batchOptsStore = observable({
 });
 const switchBatchOptsStatus = action(() => {
   batchOptsStore.open = !batchOptsStore.open;
+  if (!batchOptsStore.open) {
+    batchOptsStore.checkedKeys = [];
+  }
 })
 const updateBatchChecked = action(({ method, key }) => {
   switch (method) {
@@ -94,10 +102,22 @@ const updateBatchChecked = action(({ method, key }) => {
         batchOptsStore.checkedKeys.push(key);
       }
       break;
-    case 'reset':
-      batchOptsStore.checkedKeys = [];
-      break;
   }
+})
+const removeBatchKeys = action(() => {
+  return postBatchRemoveKeys({
+    keys: batchOptsStore.checkedKeys
+  }).then(res => {
+    const { code, data } = res.data;
+    if (code === 0) {
+      getFilesData();
+    } else {
+      message.error('删除失败');
+    }
+  }).catch(err => {
+    message.error('删除错误')
+    throw err;
+  })
 })
 const batchOptsWrapper = (Component) => {
   const Observer = observer(Component);
@@ -123,4 +143,5 @@ export {
   batchOptsWrapper,
   updateBatchChecked,
   switchBatchOptsStatus,
+  removeBatchKeys,
 }

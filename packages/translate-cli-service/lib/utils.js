@@ -184,6 +184,17 @@ const addTranslate = async (data) => {
   });
 }
 
+const batchRemoveKeys = async (keys) => {
+  const localesPath = await getLocalesPath();
+  const files = getJsonFiles(localesPath);
+  files.forEach(item => {
+    keys.forEach(key => {
+      delete item.content[key];
+    })
+    writeFile(item.path, item.content)
+  });
+}
+
 module.exports = {
   getConfig,
   updateConfig,
@@ -191,4 +202,6 @@ module.exports = {
   getFiles,
   saveFiles,
   addTranslate,
+  
+  batchRemoveKeys,
 }

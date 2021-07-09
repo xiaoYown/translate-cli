@@ -1,6 +1,13 @@
 const router = require('koa-router')();
 const codeMsg = require('./code_msg');
-const { getConfig, updateConfig, getFiles, saveFiles, addTranslate } = require('../utils');
+const {
+  getConfig,
+  updateConfig,
+  getFiles,
+  saveFiles,
+  addTranslate,
+  batchRemoveKeys,
+} = require('../utils');
 
 const { CODE_OK, DATA_NOT_EXIST } = codeMsg;
 
@@ -48,6 +55,14 @@ router.post('/addTranslate', async (ctx) => {
 
 router.post('/update', async (ctx) => {
   // TODO
+});
+
+router.post('/batch/remove_keys', async (ctx) => {
+  await batchRemoveKeys(ctx.request.body.keys);
+  ctx.body = {
+    ...CODE_OK,
+    data: null
+  };
 });
 
 
