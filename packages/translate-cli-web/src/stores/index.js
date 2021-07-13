@@ -48,8 +48,9 @@ const getConfigData = action((value) => {
 
 // - files 数据
 const defaultFileStore = () => ({
+  info: {},
   datasource: [],
-  langs: []
+  langs: [],
 });
 const filesStore = observable(defaultFileStore());
 
@@ -64,8 +65,9 @@ const getFilesData = action(() => {
     const { code, data } = res.data;
     if (code === 0) {
       const { datasource, info } = data;
-      filesStore.datasource = datasource;
+      filesStore.info = info;
       filesStore.langs = Object.keys(info);
+      filesStore.datasource = datasource;
     } else if (code === 10400) {
       message.error('指定目录不存在');
       resetFilesStore();
@@ -105,8 +107,13 @@ const updateBatchChecked = action(({ method, key }) => {
   }
 })
 const removeBatchKeys = action(() => {
-  return postBatchRemoveKeys({
-    keys: batchOptsStore.checkedKeys
+  const { checkedKeys } = batchOptsStore;
+  if (!checkedKeys.length) {
+    return message.warn('选择后删除');
+  }
+  
+  postBatchRemoveKeys({
+    keys: checkedKeys
   }).then(res => {
     const { code, data } = res.data;
     if (code === 0) {

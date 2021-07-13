@@ -1,6 +1,6 @@
 import './index.less';
 import { Input, Checkbox } from 'antd';
-import { updateBatchChecked } from '../../stores';
+import { updateBatchChecked } from '@root/stores';
 
 const ModifyInput = (props) => {
   const { name, data, onChange, batching, checked } = props;

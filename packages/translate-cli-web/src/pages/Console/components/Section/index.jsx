@@ -1,9 +1,9 @@
 import { Component } from 'react';
 import { Button, message } from 'antd';
 import { FileAddOutlined, FormOutlined, SaveOutlined } from '@ant-design/icons'
-import { saveFiles } from '../../apis';
+import { saveFiles } from '@root/apis';
 import ModifyInput from '../ModifyInput';
-import { filesWrapper, batchOptsWrapper, getFilesData } from '../../stores';
+import { filesWrapper, batchOptsWrapper, getFilesData } from '@root/stores';
 
 import ModalAdd from '../ModalAdd';
 

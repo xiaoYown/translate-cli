@@ -1,5 +1,5 @@
 import { Modal, Form, Input, Button, message } from 'antd';
-import { addTranslate } from '../../apis';
+import { addTranslate } from '@root/apis';
 
 const formItemLayout = {
   labelCol: {
